@@ -83,13 +83,34 @@ do
 		fi
 		if [ "$PRESENT" -gt "$PAST" ] ;
 		then
-			echo
-			echo "Updates are Available"
-			echo "Local:   $PAST"
-			echo "Remote:  $PRESENT"
+                       
+#If you make an option -g (for gui instead shell) then you can make another if then else fi
+#if -g false give the echos and if -g true gui stuff (xbmc-send...)
+
+			#echo
+			#echo "Updates are Available"
+			#echo "Local:   $PAST"
+			#echo "Remote:  $PRESENT"
+
+#The notification can be disabled if we use the dialog, just an example
+#The executed py script produces a dialog in xbmc i this dialog will answered with yes it trigger this script with option -q
+#i will also give the option -b for reboot but we can also make a second py file with a reboot suggestion dialog
+#it can be triggered if update process was successfully and if any error occours we make a notification
+#path to py file is hardcoded as you can see iam sure we can make it relativ or put in specialpath
+
+			xbmc-send -a "Notification(Update Available,Current: $PRESENT Online: $PAST)"
+		        xbmc-send -a "RunScript(/storage/script/openelec-nightly_latest_dialog.py,$PRESENT)"
 		else
-			echo
-			echo "No Updates Available"
+
+#In gui mode this can maybe completely disabled why to know if there is no update, it's more an example for notification
+
+			#echo
+			#echo "No Updates Available"
+                        xbmc-send -a "Notification(Update Status,No Updates Available)"
+                        xbmc-send -a "RunScript(/storage/script/openelec-nightly_latest_dialog.py,$PRESENT)"
+
+#Don't be confused that i also run the dialog here, it's just to be able to test it nevermind if an update is available or not 
+
 		fi
 		rm -rf /dev/shm/xbmc-update/
 		unset arch
